@@ -7,8 +7,8 @@ DEBUG = True
 FLATPAGES_AUTO_RELOAD = DEBUG
 FLATPAGES_EXTENSION = '.md'
 
-app = Flask(_name_)
-app.config.from_object(_name_)
+app = Flask(__name__)
+app.config.from_object(__name__)
 pages = FlatPages(app)
 freezer = Freezer(app)
 
@@ -16,7 +16,7 @@ freezer = Freezer(app)
 def index():
     return render_template('index.html')
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "build":
         freezer.freeze()
     else:
