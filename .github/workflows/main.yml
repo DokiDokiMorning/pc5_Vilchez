@@ -13,7 +13,7 @@ jobs:
       - name: check out flask-app
         uses: actions/checkout@v3
       - name: Install and Build
-        run: pip install -r ./otro.py && python app.py build
+        run: pip install -r ./otro.txt && python app.py build
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
