@@ -2,19 +2,34 @@ name: GitHub Pages
 
 on: 
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches: 
+      - main
+  pull_request:
 
 jobs:
-  build-and-deploy:
-    name: deply mi app flask
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9"]
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - name: check out flask-app
-        uses: actions/checkout@v3
-      - name: Install and Build
-        run: python app.py build
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
         with:
-          folder: build
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: pip install -r ./otro.txt
+      - name: Build project app
+        run: python app.py build
+
+      - name: Deploy app
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
